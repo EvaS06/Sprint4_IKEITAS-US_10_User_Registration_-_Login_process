@@ -1,5 +1,7 @@
 {
-//US_10--E2E_Test_new_registration-parent_login_new_order
+    //Testy SPRINT 4 - IKEItas_EVA
+
+    //US_10--E2E_Test_new_registration-parent_login_new_order
     @Test
     void Test_registration_new_user_parent()
     {
@@ -67,7 +69,8 @@
     }
 
     @Test
-    void Logout_user(){
+    void Logout_user()
+    {
         login("Eva.sprint4@test.cz", "Pejsek1");
 
         browser.loginSection.logout();
@@ -76,4 +79,31 @@
 
     }
 
+    @Test
+    void Edit_password()
+    {
+        var puvodniHeslo = "Pejsek1";
+        var noveHeslo = "Pejsek2";
+        login("Eva.sprint4@test.cz", puvodniHeslo);
+        browser.waitFor(2);
+
+        browser.profileSection.goToProfilePage();
+        browser.profileSection.insertPassword(noveHeslo);
+        browser.profileSection.insertPasswordVerification(noveHeslo);
+        browser.profileSection.clickChangeButton();
+
+        browser.waitFor(10);
+        browser.loginSection.logout();
+        browser.waitFor(8);
+
+        login("Eva.sprint4@test.cz", noveHeslo);
+        browser.waitFor(5);
+        asserter.applicationSection.checkIsLoggedIn();
+
+        browser.profileSection.goToProfilePage();
+        browser.profileSection.insertPassword(puvodniHeslo);
+        browser.profileSection.insertPasswordVerification(puvodniHeslo);
+        browser.profileSection.clickChangeButton();
+
+    }
 }
