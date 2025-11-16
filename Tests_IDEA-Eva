@@ -1,0 +1,79 @@
+{
+//US_10--E2E_Test_new_registration-parent_login_new_order
+    @Test
+    void Test_registration_new_user_parent()
+    {
+        //!!!test_nelze_reprodukovat_s_uvedenými_daty
+        browser.loginSection.clickLoginMenuLink();
+        browser.loginSection.clickRegisterButton();
+        browser.registerSection.insertFirstAndLastName("Eva", "Sprint4");
+        browser.registerSection.insertEmail("Eva.sprint4@test.cz");
+        browser.registerSection.insertPassword("Pejsek1");
+        browser.registerSection.insertPasswordConfirmation("Pejsek1");
+        browser.registerSection.clickRegisterButton();
+
+    }
+
+    @Test
+    void Test_login()
+    //test--login_user_parent
+    {
+        login("Eva.sprint4@test.cz","Pejsek1");
+    }
+    void login(String login, String password)
+    {
+        browser.loginSection.clickLoginMenuLink();
+        browser.loginSection.insertEmail(login);
+        browser.loginSection.insertPassword(password);
+        browser.loginSection.clickLoginButton();
+
+        asserter.applicationSection.checkIsLoggedIn();
+    }
+
+    @Test
+    void E2E_Test_login_and_new_application()
+    {
+        login("Eva.sprint4@test.cz", "Pejsek1");
+
+        browser.headerMenu.goToApplicationsSection();
+        browser.applicationSection.clickCreateNewApplicationButton();
+        browser.applicationSection.selectProgrammingSection();
+        browser.applicationSection.clickCreatePythonApplicationButton();
+
+        browser.applicationDetailsSection.selectTerm("02.02. - 06.02.2026");
+        browser.applicationDetailsSection.insertStudentFirstName("Tomáš");
+        var generovanePrjimeni = browser.generateRandomName(5);
+        browser.applicationDetailsSection.insertStudentLastName(generovanePrjimeni);
+        browser.applicationDetailsSection.insertBirthdate("01.12.2020");
+        browser.applicationDetailsSection.selectCashPaymentMethod();
+        browser.applicationDetailsSection.insertNote("automatizace");
+        browser.applicationDetailsSection.clickAcceptTermsCheckbox();
+        browser.applicationDetailsSection.clickCreateApplicationButton();
+        browser.waitFor(2);
+
+        //asserter application
+        browser.headerMenu.goToApplicationsSection();
+        browser.applicationSection.search(generovanePrjimeni);
+        browser.waitFor(2);
+
+        browser.applicationSection.openFirstApplicationDetailsPage();
+        asserter.applicationDetailSection.checkPaymentMethod("Hotově");
+        asserter.applicationDetailSection.checkDateOfBirth("01.12.2020");
+        asserter.applicationDetailSection.checkFirstName("Tomáš");
+        asserter.applicationDetailSection.checkLastName(generovanePrjimeni);
+        asserter.applicationDetailSection.checkNote("automatizace");
+        asserter.applicationDetailSection.checkRemainingAmountToPay("1 800 Kč");
+
+    }
+
+    @Test
+    void Logout_user(){
+        login("Eva.sprint4@test.cz", "Pejsek1");
+
+        browser.loginSection.logout();
+        browser.waitFor(2);
+        asserter.loginSection.checkUserIsNotLoggedIn();
+
+    }
+
+}
