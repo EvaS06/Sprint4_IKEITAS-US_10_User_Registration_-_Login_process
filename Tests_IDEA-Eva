@@ -106,4 +106,43 @@
         browser.profileSection.clickChangeButton();
 
     }
+
+    @Test
+    void E2E_Test_login_and_new_application_healtDisability() 
+    {
+        login("Eva.sprint4@test.cz", "Pejsek1");
+
+        browser.headerMenu.goToApplicationsSection();
+        browser.applicationSection.clickCreateNewApplicationButton();
+        browser.applicationSection.selectProgrammingSection();
+        browser.applicationSection.clickCreatePythonApplicationButton();
+
+        browser.applicationDetailsSection.selectTerm("02.02. - 06.02.2026");
+        browser.applicationDetailsSection.insertStudentFirstName("Test");
+        var generovanePrjimeni = browser.generateRandomName(5);
+        browser.applicationDetailsSection.insertStudentLastName(generovanePrjimeni);
+        browser.applicationDetailsSection.insertBirthdate("01.11.2020");
+        browser.applicationDetailsSection.selectBankTransferPaymentMethod();
+        browser.applicationDetailsSection.insertNote("automatizace01");
+        browser.applicationDetailsSection.clickAcceptTermsCheckbox();
+        browser.applicationDetailsSection.clickHealthDisabilityCheckbox();
+        browser.applicationDetailsSection.insertHealthDisabilityNote("zdravotní omezení");
+        browser.applicationDetailsSection.clickCreateApplicationButton();
+        browser.waitFor(2);
+
+        //asserter application
+        browser.headerMenu.goToApplicationsSection();
+        browser.applicationSection.search(generovanePrjimeni);
+        browser.waitFor(2);
+
+        browser.applicationSection.openFirstApplicationDetailsPage();
+        asserter.applicationDetailSection.checkPaymentMethod("Bankovní převod");
+        asserter.applicationDetailSection.checkDateOfBirth("01.11.2020");
+        asserter.applicationDetailSection.checkFirstName("Test");
+        asserter.applicationDetailSection.checkLastName(generovanePrjimeni);
+        asserter.applicationDetailSection.checkNote("automatizace01");
+        asserter.applicationDetailSection.checkHealthDisabilityNote("zdravotní omezení");
+        asserter.applicationDetailSection.checkRemainingAmountToPay("1 800 Kč");
+    }
+
 }
